@@ -61,13 +61,12 @@ Market Eye is an intelligent web-based stock analysis system that provides:
 
 ### 1. Clone the repository
 
-```bash
+
 git clone https://github.com/mohammadalblooshi1/Project_Market_Eye.git
 cd market-eye
 
 ### 2. Setup Python environment
 
-```bash
 python3.11 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
