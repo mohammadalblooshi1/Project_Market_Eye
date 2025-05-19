@@ -4,6 +4,8 @@ from Backend.auth import register_user, login_user, log_activity
 from Backend.forecasting import load_and_prepare_data, compute_analytics, forecast_with_mlp, forecast_january_with_mlp
 from Backend.llm import generate_recommendation
 from Backend.pdf_generator import generate_pdf
+from Backend.crew_tasks import CollectStockDataTool, ProcessStockDataTool, LLMRecommendationTool
+
 
 
 # Logout handler
@@ -58,15 +60,23 @@ def main():
             df = load_and_prepare_data("World-Stock-Prices-Dataset.csv")
             log_activity(st.session_state.user_id, "data_loaded")
 
-            analytics_df = compute_analytics(df)
-            st.markdown("### 🔍 Stock Analytics")
-            st.dataframe(analytics_df)
-
             st.markdown("### 🤖 Forecast and Recommendation")
             selected_ticker = st.selectbox("Select Ticker:", df['Ticker'].unique())
 
             if selected_ticker:
-                forecast_df, mse, rmse = forecast_january_with_mlp(df, selected_ticker)
+
+                # analytics_df = compute_analytics(df)
+                collector_tool = CollectStockDataTool()
+                analytics_df = collector_tool.run()
+                st.markdown("### 🔍 Stock Analytics")
+                st.dataframe(analytics_df)
+
+                processor_tool = ProcessStockDataTool()
+                output = processor_tool.run(selected_ticker)
+                forecast_df = output['forecast_df']
+                mse = output['mse']
+                rmse = output['rmse']
+                #  forecast_df, mse, rmse = forecast_january_with_mlp(df, selected_ticker)
                 st.line_chart(forecast_df.set_index('Date')[['Actual_Close', 'Predicted_Close']])
                 st.metric("MSE", f"{mse:.2f}")
                 st.metric("RMSE", f"{rmse:.2f}")
@@ -80,9 +90,13 @@ def main():
                 company = df[df['Ticker'] == selected_ticker]['Brand_Name'].iloc[0]
 
                 # LLM Recommendation
-                recommendation = generate_recommendation(
+                llm_tool = LLMRecommendationTool()
+                recommendation = llm_tool.run(
                     selected_ticker, company, forecast_price, growth, rmse, sector
                 )
+                # recommendation = generate_recommendation(
+                  #  selected_ticker, company, forecast_price, growth, rmse, sector
+                #)
                 st.markdown("### 💡 LLM Recommendation")
                 st.info(recommendation)
 

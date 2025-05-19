@@ -2,8 +2,8 @@
 
 # Each tool is a callable class with a .run() method, compatible with CrewAI structure
 
-from forecasting import load_and_prepare_data, compute_analytics, forecast_with_mlp
-from llm import generate_recommendation
+from Backend.forecasting import load_and_prepare_data, compute_analytics, forecast_with_mlp, forecast_january_with_mlp
+from Backend.llm import generate_recommendation
 
 
 # Tool 1 – Data Collector
@@ -14,21 +14,21 @@ class CollectStockDataTool:
     def run(self):
         file_path = "World-Stock-Prices-Dataset.csv"
         df = load_and_prepare_data(file_path)
-        return df
-
+        analytics = compute_analytics(df)
+        return analytics
 
 # Tool 2 – Data Processor
 class ProcessStockDataTool:
     name = "Data Processor"
     description = "Processes stock data, forecasts prices, and computes analytics"
 
-    def run(self):
+    def run(self, selected_ticker):
         file_path = "World-Stock-Prices-Dataset.csv"
         df = load_and_prepare_data(file_path)
         analytics = compute_analytics(df)
 
-        ticker = df['Ticker'].unique()[0]
-        forecast_df, mse, rmse = forecast_with_mlp(df, ticker)
+        ticker = selected_ticker
+        forecast_df, mse, rmse = forecast_january_with_mlp(df, ticker)
 
         return {
             "ticker": ticker,
@@ -44,13 +44,6 @@ class LLMRecommendationTool:
     name = "LLM Recommendation Generator"
     description = "Generates Buy/Hold/Sell advice using Gemini LLM"
 
-    def run(self):
-        # Example input; ideally should come from user or Agent 2
-        ticker = "AAPL"
-        company = "Apple Inc."
-        forecast_price = 187.20
-        growth = 34.75
-        rmse = 3.41
-        sector = "Technology"
-
+    def run(self,ticker, company, forecast_price, growth, rmse, sector):
+        
         return generate_recommendation(ticker, company, forecast_price, growth, rmse, sector)
