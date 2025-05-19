@@ -3,27 +3,50 @@
 Market Eye is an intelligent web-based stock analysis system that provides:
 
 🔍 Data-driven financial forecasting
+
 🧠 Investment recommendations using Gemini LLM
+
 📄 PDF reports for decision-making
+
 👥 Secure login/logout with activity logging
+
 ⚙️ Task orchestration powered by CrewAI
+
 🗂️ Project Structure
 
 
 📁 Backend Core Modules
 
 File	Description
-crew_tasks.py	Contains the main task functions for CrewAI agents: data collection, forecasting, and recommendation.
-forecasting.py	Time-series forecasting using MLPRegressor and performance metrics (MSE, RMSE).
-llm.py	Gemini-based recommendation generator using structured input.
-pdf_generator.py	Exports analysis results and recommendations as professional PDFs.
-auth.py	Handles user registration, password hashing, login, and activity logging.
+crew_tasks.py	
+
+Contains the main task functions for CrewAI agents: data collection, forecasting, and recommendation.
+
+forecasting.py	
+
+Time-series forecasting using MLPRegressor and performance metrics (MSE, RMSE).
+
+
+llm.py	
+
+Gemini-based recommendation generator using structured input.
+
+
+pdf_generator.py	
+
+Exports analysis results and recommendations as professional PDFs.
+
+
+auth.py	
+
+Handles user registration, password hashing, login, and activity logging.
 
 
 📁 App & UI
 
 File	Description
-app.py	Streamlit front-end for login, ticker selection, forecast visualization, LLM output, and PDF export.
+app.py	
+Streamlit front-end for login, ticker selection, forecast visualization, LLM output, and PDF export.
 db_setup.py	One-time setup script to initialize users.db with tables users and activity_logs.
 
 
