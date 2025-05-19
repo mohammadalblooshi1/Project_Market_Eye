@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
-from auth import register_user, login_user, log_activity
-from forecasting import load_and_prepare_data, compute_analytics, forecast_with_mlp, forecast_january_with_mlp
-from llm import generate_recommendation
-from pdf_generator import generate_pdf
+from Backend.auth import register_user, login_user, log_activity
+from Backend.forecasting import load_and_prepare_data, compute_analytics, forecast_with_mlp, forecast_january_with_mlp
+from Backend.llm import generate_recommendation
+from Backend.pdf_generator import generate_pdf
 
 
 # Logout handler
